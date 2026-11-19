@@ -1,0 +1,31 @@
+format      = 2
+name        = "shop-inventory"
+summary     = "A woodworking shop's tool inventory over MCP, read-only; no key in the Sprite"
+description = """
+Registers the shop inventory's MCP server (woodworking.haunt.house) in Claude Code, \
+reached through a custom API connector in your org that holds a token the shop issued. \
+The Sprite never sees the token: the Sprites gateway adds it, and only on /mcp. A token \
+with the read scope can search the inventory and read tools, their specs and what is \
+known about each; the server leaves out purchase records, serial numbers, locations and \
+photos, and refuses every change. Create the connector once with \
+`mix profiles.connect -p antialias/shop-inventory-profile/shop-inventory@v1`."""
+
+[env]
+SHOP_INVENTORY_URL = { from = "connector", provider = "custom_api" }
+
+[policy]
+rules = [
+  { include = "defaults" },
+  { action = "allow", domain = "api.sprites.dev" },
+]
+
+[[connectors]]
+provider  = "custom_api"
+base_url  = "https://woodworking.haunt.house"
+auth      = { method = "header", prefix = "Bearer" }
+endpoints = ["/mcp"]
+
+[claude.mcp_servers.shop]
+type = "http"
+url  = "${SHOP_INVENTORY_URL}/mcp"
+auth = "connector"
