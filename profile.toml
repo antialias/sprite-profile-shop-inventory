@@ -8,7 +8,7 @@ The Sprite never sees the token: the Sprites gateway adds it, and only on /mcp. 
 with the read scope can search the inventory and read tools, their specs and what is \
 known about each; the server leaves out purchase records, serial numbers, locations and \
 photos, and refuses every change. Create the connector once with \
-`mix profiles.connect -p antialias/shop-inventory-profile/shop-inventory@v1`."""
+`sprite-profiles connect @antialias/shop-inventory`."""
 
 [env]
 SHOP_INVENTORY_URL = { from = "connector", provider = "custom_api" }

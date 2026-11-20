@@ -1,33 +1,32 @@
-# shop-inventory-profile
+# sprite-profile-shop-inventory
 
 A [sprite-profiles](https://github.com/antialias/sprite-profiles) profile published by the
 service it connects to: a woodworking shop's tool inventory, served as an MCP server at
-`woodworking.haunt.house`. Pick it by address, and Claude Code on a
-[Fly.io Sprite](https://sprites.dev) can look up the shop's tools, their specs and what is
-missing, while the Sprite never holds a key.
+`woodworking.haunt.house`. Add it to a [Fly.io Sprite](https://sprites.dev) and Claude Code
+can look up the shop's tools, their specs and what is missing, while the Sprite never holds
+a key.
 
-It is a small example of the idea behind sprite-profiles: a service describes how it
-plugs into a Sprite, in its own repository, and anyone composes it with other profiles.
+It is a small example of the idea behind sprite-profiles: a service describes how it plugs
+into a Sprite, in its own repository, and anyone composes it with other profiles. The
+repository's name, `sprite-profile-<name>`, is what makes `@antialias/shop-inventory` find it.
 
 ## Use it
 
-From a checkout of sprite-profiles:
-
 ```sh
-# See what it would do: domains, connector, MCP server, skill
-mix profiles.plan -p claude-code -p antialias/shop-inventory-profile/shop-inventory@v1
+# What it can touch: the connector, the network, the MCP server, the skill
+sprite-profiles show @antialias/shop-inventory
 
 # Once per Fly org: store the shop's token in a connector (asked for with echo off)
-mix profiles.connect -p antialias/shop-inventory-profile/shop-inventory@v1
+sprite-profiles connect @antialias/shop-inventory
 
-# Launch
-mix profiles.launch -p claude-code -p antialias/shop-inventory-profile/shop-inventory@v1 --name my-sprite
+# Launch a Sprite with Claude Code and the shop
+sprite-profiles launch claude-code @antialias/shop-inventory --name my-sprite
 ```
 
-`mix profiles.connect` creates a custom API connector named `antialias.shop-inventory`.
-It admits only Sprites labelled `profile:antialias.shop-inventory`, which the launch sets,
-and only the path `/mcp`. Inside the Sprite, Claude Code's `shop` server points at the
-Sprites gateway, which adds the token on the way out.
+`connect` creates a custom API connector named `antialias.shop-inventory`. It admits only
+Sprites labelled `profile:antialias.shop-inventory`, which the launch sets, and only the
+path `/mcp`. Inside the Sprite, Claude Code's `shop` server points at the Sprites gateway,
+which adds the token on the way out.
 
 ## What a token can see
 
@@ -38,10 +37,14 @@ and refuses every change.
 
 ## What is in it
 
-- `shop-inventory/profile.toml`: the connector declaration (base URL, Bearer header, the
-  one endpoint), the MCP server, and the network rule for the gateway.
-- `shop-inventory/claude/skills/shop-inventory/SKILL.md`: how Claude Code should use the
-  server, and that it reads only.
+- `profile.toml`: the connector declaration (base URL, Bearer header, the one endpoint), the
+  MCP server, and the network rule for the gateway.
+- `claude/skills/shop-inventory/SKILL.md`: how Claude Code should use the server, and that
+  it reads only.
+
+Versions are tags: `v1.0.0` is what `@antialias/shop-inventory@1` picks. The older address
+`antialias/shop-inventory-profile/shop-inventory@v1` still resolves, through GitHub's
+redirect, to the first commit.
 
 ## License
 
